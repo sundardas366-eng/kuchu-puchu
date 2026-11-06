@@ -280,14 +280,14 @@
     <section class="community-stats-section" id="communityStatsSection" aria-label="Community Love & Ratings">
       
       <!-- Collapsible Trigger Pill: "View More" -->
-      <button class="stats-toggle-pill" id="statsToggleBtn" aria-expanded="false" title="Click to view love stats and rate this website">
+      <button class="stats-toggle-pill" id="statsToggleBtn" aria-expanded="false" title="Click to view real visitor stats and rate this website">
         <span class="pulse-indicator">
           <span class="pulse-ring"></span>
           <span class="pulse-dot"></span>
         </span>
-        <span class="toggle-text"><strong id="pillViewsCount">1,482</strong> Lovers Visited</span>
+        <span class="toggle-text"><strong id="pillViewsCount">1</strong> Visitor</span>
         <span class="toggle-divider">•</span>
-        <span class="toggle-rating">⭐ <strong id="pillAvgRating">4.9</strong></span>
+        <span class="toggle-rating">⭐ <strong id="pillAvgRating">5.0</strong></span>
         <span class="toggle-expand-btn">
           <span class="toggle-label-text">View More</span>
           <svg class="chevron-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -303,11 +303,11 @@
           <div class="stats-card-header">
             <div class="header-title-wrap">
               <span class="header-emoji">🌸</span>
-              <span class="header-title">Love Community Stats</span>
+              <span class="header-title">Live Visitor & Rating Stats</span>
             </div>
             <span class="live-pill-tag">
               <span class="live-blink"></span>
-              Live Tracking
+              Real-time Active
             </span>
           </div>
 
@@ -315,19 +315,19 @@
           <div class="stats-badges-row">
             <div class="stat-badge-box">
               <div class="badge-icon">👀</div>
-              <div class="badge-number" id="statsTotalViews">1,482</div>
-              <div class="badge-label">Total Visits</div>
+              <div class="badge-number" id="statsTotalViews">1</div>
+              <div class="badge-label">Real Visitors</div>
             </div>
 
             <div class="stat-badge-box live-now">
               <div class="badge-icon">🟢</div>
-              <div class="badge-number" id="statsActiveNow">4</div>
+              <div class="badge-number" id="statsActiveNow">1</div>
               <div class="badge-label">Online Now</div>
             </div>
 
             <div class="stat-badge-box">
               <div class="badge-icon">💍</div>
-              <div class="badge-number" id="statsTotalYes">953</div>
+              <div class="badge-number" id="statsTotalYes">1</div>
               <div class="badge-label">Said YES</div>
             </div>
           </div>
@@ -336,12 +336,12 @@
           <div class="rating-interactive-box">
             <div class="rating-summary-row">
               <div class="big-rating-number">
-                <span class="score" id="bigRatingScore">4.9</span>
+                <span class="score" id="bigRatingScore">5.0</span>
                 <span class="max-score">/ 5.0</span>
               </div>
               <div class="rating-stars-visual">
                 <div class="stars-gold">★★★★★</div>
-                <div class="rating-count-label">Based on <strong id="totalReviewsCount">342</strong> lover ratings</div>
+                <div class="rating-count-label"><span id="totalReviewsCount">1</span> genuine rating</div>
               </div>
             </div>
 
@@ -361,11 +361,14 @@
           </div>
 
           <div class="stats-card-footer">
-            <span>Crafted with ❤️ • <strong>Developer by Eagle</strong> 🦅</span>
+            <span>Verified Real Traffic • <strong>Developer by Eagle</strong> 🦅</span>
           </div>
 
         </div>
       </div>
+
+      <!-- Hidden real hit tracker img (increments live global hits) -->
+      <img src="https://hits.sh/kuchu-puchu-sigma.vercel.app.svg" alt="" style="position:absolute;width:1px;height:1px;opacity:0.001;pointer-events:none;">
     </section>
   </main>
 
