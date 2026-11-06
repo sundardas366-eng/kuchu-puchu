@@ -275,6 +275,98 @@
       </div>
 
     </div>
+
+    <!-- Community Love Stats & Rating Widget -->
+    <section class="community-stats-section" id="communityStatsSection" aria-label="Community Love & Ratings">
+      
+      <!-- Collapsible Trigger Pill: "View More" -->
+      <button class="stats-toggle-pill" id="statsToggleBtn" aria-expanded="false" title="Click to view love stats and rate this website">
+        <span class="pulse-indicator">
+          <span class="pulse-ring"></span>
+          <span class="pulse-dot"></span>
+        </span>
+        <span class="toggle-text"><strong id="pillViewsCount">1,482</strong> Lovers Visited</span>
+        <span class="toggle-divider">•</span>
+        <span class="toggle-rating">⭐ <strong id="pillAvgRating">4.9</strong></span>
+        <span class="toggle-expand-btn">
+          <span class="toggle-label-text">View More</span>
+          <svg class="chevron-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+        </span>
+      </button>
+
+      <!-- Expandable Stats & Rating Card -->
+      <div class="stats-expandable-card" id="statsCard">
+        <div class="stats-card-inner">
+          
+          <div class="stats-card-header">
+            <div class="header-title-wrap">
+              <span class="header-emoji">🌸</span>
+              <span class="header-title">Love Community Stats</span>
+            </div>
+            <span class="live-pill-tag">
+              <span class="live-blink"></span>
+              Live Tracking
+            </span>
+          </div>
+
+          <!-- 3 Stat Badges -->
+          <div class="stats-badges-row">
+            <div class="stat-badge-box">
+              <div class="badge-icon">👀</div>
+              <div class="badge-number" id="statsTotalViews">1,482</div>
+              <div class="badge-label">Total Visits</div>
+            </div>
+
+            <div class="stat-badge-box live-now">
+              <div class="badge-icon">🟢</div>
+              <div class="badge-number" id="statsActiveNow">4</div>
+              <div class="badge-label">Online Now</div>
+            </div>
+
+            <div class="stat-badge-box">
+              <div class="badge-icon">💍</div>
+              <div class="badge-number" id="statsTotalYes">953</div>
+              <div class="badge-label">Said YES</div>
+            </div>
+          </div>
+
+          <!-- Rating Breakdown & Interactive Stars -->
+          <div class="rating-interactive-box">
+            <div class="rating-summary-row">
+              <div class="big-rating-number">
+                <span class="score" id="bigRatingScore">4.9</span>
+                <span class="max-score">/ 5.0</span>
+              </div>
+              <div class="rating-stars-visual">
+                <div class="stars-gold">★★★★★</div>
+                <div class="rating-count-label">Based on <strong id="totalReviewsCount">342</strong> lover ratings</div>
+              </div>
+            </div>
+
+            <!-- Rate It Yourself -->
+            <div class="user-rate-box">
+              <div class="user-rate-title" id="userRateTitle">Rate this website:</div>
+              <div class="interactive-star-group" id="interactiveStarGroup">
+                <button type="button" class="star-interactive" data-star="1" aria-label="1 star">★</button>
+                <button type="button" class="star-interactive" data-star="2" aria-label="2 stars">★</button>
+                <button type="button" class="star-interactive" data-star="3" aria-label="3 stars">★</button>
+                <button type="button" class="star-interactive" data-star="4" aria-label="4 stars">★</button>
+                <button type="button" class="star-interactive" data-star="5" aria-label="5 stars">★</button>
+              </div>
+              <div class="star-hint-label" id="starHintLabel">Tap a star to drop your review 💖</div>
+            </div>
+
+          </div>
+
+          <div class="stats-card-footer">
+            <span>Crafted with ❤️ • <strong>Developer by Eagle</strong> 🦅</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- Footer -->

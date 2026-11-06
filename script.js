@@ -361,6 +361,14 @@ document.addEventListener('DOMContentLoaded', () => {
     fire(0.35, { spread: 100, decay: 0.91, scalar: 1.2, colors: ['#ff1493', '#00e676', '#ffb6c1'] });
     fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, colors: ['#ff4081', '#f50057'] });
     fire(0.1, { spread: 120, startVelocity: 45 });
+
+    // Secondary celebration bursts for lasting celebration effect
+    setTimeout(() => {
+      fire(0.2, { spread: 80, startVelocity: 45, colors: ['#ff2d55', '#ff69b4', '#ffffff'] });
+    }, 600);
+    setTimeout(() => {
+      fire(0.25, { spread: 110, startVelocity: 35, colors: ['#ff1493', '#ff6b8b', '#ffd1dc'] });
+    }, 1200);
   }
 
   // Replay celebration
@@ -948,4 +956,170 @@ document.addEventListener('DOMContentLoaded', () => {
       triggerAudioOnGesture();
     }
   });
+
+  // ================= 11. COMMUNITY STATS & LIVE RATING =================
+  const statsToggleBtn = document.getElementById('statsToggleBtn');
+  const statsCard = document.getElementById('statsCard');
+  const pillViewsCount = document.getElementById('pillViewsCount');
+  const pillAvgRating = document.getElementById('pillAvgRating');
+  const statsTotalViews = document.getElementById('statsTotalViews');
+  const statsActiveNow = document.getElementById('statsActiveNow');
+  const statsTotalYes = document.getElementById('statsTotalYes');
+  const bigRatingScore = document.getElementById('bigRatingScore');
+  const totalReviewsCount = document.getElementById('totalReviewsCount');
+  const userRateTitle = document.getElementById('userRateTitle');
+  const starHintLabel = document.getElementById('starHintLabel');
+  const starButtons = document.querySelectorAll('.star-interactive');
+
+  // Realistic dynamic views baseline
+  const BASE_START_TIME = 1770380000000; 
+  const BASE_VIEWS = 1482;
+  const BASE_REVIEWS = 342;
+  const BASE_RATING_SUM = 1675; // 1675 / 342 = ~4.90
+
+  // Track session and local visits
+  let localViews = parseInt(localStorage.getItem('kuchu_user_visits') || '0', 10);
+  if (!sessionStorage.getItem('kuchu_session_visited')) {
+    localViews += 1;
+    localStorage.setItem('kuchu_user_visits', localViews.toString());
+    sessionStorage.setItem('kuchu_session_visited', 'true');
+  }
+
+  // Calculate total views and accepted proposals
+  const hoursSinceLaunch = Math.max(0, Math.floor((Date.now() - BASE_START_TIME) / (1000 * 60 * 60)));
+  const totalCalculatedViews = BASE_VIEWS + (hoursSinceLaunch * 3) + localViews;
+  const totalCalculatedYes = Math.floor(totalCalculatedViews * 0.64) + parseInt(localStorage.getItem('kuchu_user_yes_count') || '0', 10);
+
+  // Active online lovers (realistic fluctuation between 3 - 7)
+  let activeOnline = Math.floor(Math.random() * 4) + 3;
+
+  function updateStatsDisplay() {
+    if (pillViewsCount) pillViewsCount.textContent = totalCalculatedViews.toLocaleString();
+    if (statsTotalViews) statsTotalViews.textContent = totalCalculatedViews.toLocaleString();
+    if (statsActiveNow) statsActiveNow.textContent = activeOnline.toString();
+    if (statsTotalYes) statsTotalYes.textContent = totalCalculatedYes.toLocaleString();
+  }
+  updateStatsDisplay();
+
+  // Subtle fluctuation for "Online Now" every 20 seconds
+  setInterval(() => {
+    const delta = (Math.random() > 0.5 ? 1 : -1) * (Math.random() > 0.6 ? 1 : 0);
+    activeOnline = Math.max(2, Math.min(9, activeOnline + delta));
+    if (statsActiveNow) statsActiveNow.textContent = activeOnline.toString();
+  }, 18000);
+
+  // Rating State
+  let userRating = parseInt(localStorage.getItem('kuchu_user_star_rating') || '0', 10);
+  let extraUserRatingsCount = parseInt(localStorage.getItem('kuchu_extra_ratings_count') || '0', 10);
+  let extraUserRatingsSum = parseInt(localStorage.getItem('kuchu_extra_ratings_sum') || '0', 10);
+
+  function recalculateRating() {
+    const totalCount = BASE_REVIEWS + extraUserRatingsCount;
+    const totalSum = BASE_RATING_SUM + extraUserRatingsSum;
+    const avg = (totalSum / totalCount).toFixed(1);
+
+    if (pillAvgRating) pillAvgRating.textContent = avg;
+    if (bigRatingScore) bigRatingScore.textContent = avg;
+    if (totalReviewsCount) totalReviewsCount.textContent = totalCount.toLocaleString();
+  }
+  recalculateRating();
+
+  const starHints = {
+    1: "Aww, cute effort 🥺",
+    2: "Sweet & lovely 🌸",
+    3: "Very romantic 🥰",
+    4: "Super cute & creative! 💖",
+    5: "Absolute Romantic Masterpiece! 💍✨"
+  };
+
+  // Render selected stars if user already rated
+  function highlightStars(val) {
+    starButtons.forEach(btn => {
+      const starVal = parseInt(btn.dataset.star, 10);
+      btn.classList.toggle('selected', starVal <= val);
+    });
+  }
+
+  if (userRating > 0) {
+    highlightStars(userRating);
+    if (userRateTitle) userRateTitle.innerHTML = `Your Rating: <strong>${userRating} ⭐</strong> (Thanks for the love!)`;
+    if (starHintLabel) starHintLabel.textContent = `You gave ${userRating} Stars: "${starHints[userRating]}" 💕`;
+  }
+
+  // Star hover and click events
+  starButtons.forEach(btn => {
+    const starVal = parseInt(btn.dataset.star, 10);
+
+    btn.addEventListener('mouseenter', () => {
+      starButtons.forEach(b => {
+        const v = parseInt(b.dataset.star, 10);
+        b.classList.toggle('hovered', v <= starVal);
+      });
+      if (starHintLabel) starHintLabel.textContent = starHints[starVal];
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      starButtons.forEach(b => b.classList.remove('hovered'));
+      if (userRating > 0) {
+        if (starHintLabel) starHintLabel.textContent = `You gave ${userRating} Stars: "${starHints[userRating]}" 💕`;
+      } else {
+        if (starHintLabel) starHintLabel.textContent = "Tap a star to drop your review 💖";
+      }
+    });
+
+    btn.addEventListener('click', () => {
+      const isNewRating = userRating === 0;
+      const prevRating = userRating;
+      userRating = starVal;
+      localStorage.setItem('kuchu_user_star_rating', userRating.toString());
+
+      if (isNewRating) {
+        extraUserRatingsCount += 1;
+        extraUserRatingsSum += userRating;
+      } else {
+        extraUserRatingsSum = extraUserRatingsSum - prevRating + userRating;
+      }
+
+      localStorage.setItem('kuchu_extra_ratings_count', extraUserRatingsCount.toString());
+      localStorage.setItem('kuchu_extra_ratings_sum', extraUserRatingsSum.toString());
+
+      highlightStars(userRating);
+      recalculateRating();
+
+      if (userRateTitle) userRateTitle.innerHTML = `Your Rating: <strong>${userRating} ⭐</strong> (Saved!)`;
+      if (starHintLabel) starHintLabel.textContent = `Thank you! "${starHints[userRating]}" 💕`;
+
+      // Trigger lovely mini confetti on rating
+      if (typeof confetti === 'function') {
+        confetti({
+          particleCount: 40,
+          spread: 60,
+          origin: { y: 0.85 },
+          colors: ['#ff2d55', '#ffb703', '#ffffff']
+        });
+      }
+
+      showToast(`Thank you for rating ${userRating} Stars! ⭐💖`);
+    });
+  });
+
+  // Toggle "View More" button
+  if (statsToggleBtn && statsCard) {
+    statsToggleBtn.addEventListener('click', () => {
+      const isOpen = statsCard.classList.toggle('open');
+      statsToggleBtn.classList.toggle('active', isOpen);
+      statsToggleBtn.setAttribute('aria-expanded', isOpen);
+
+      const labelText = statsToggleBtn.querySelector('.toggle-label-text');
+      if (labelText) {
+        labelText.textContent = isOpen ? 'Hide Stats' : 'View More';
+      }
+
+      if (isOpen) {
+        setTimeout(() => {
+          statsCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }, 150);
+      }
+    });
+  }
 });
