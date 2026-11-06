@@ -286,16 +286,33 @@ document.addEventListener('DOMContentLoaded', () => {
       toggleSound(true);
     }
 
-    // Pre-fill WhatsApp message
-    const crush = state.recipientName ? `${state.recipientName}` : 'My Love';
-    const sender = state.creatorName || 'Your Valentine';
-    const confirmationText = encodeURIComponent(
-      `Yaaay! 🥰 I said YES to being your Valentine! 💕💍 Can't wait for our date! ✨`
-    );
+    // Pre-fill WhatsApp confirmation message
+    updateCelebrationWhatsApp();
+  }
 
-    document.getElementById('sendLoveBackBtn').onclick = () => {
-      window.open(`https://api.whatsapp.com/send?text=${confirmationText}`, '_blank');
-    };
+  // Interactive Valentine Date Activity Selection
+  const activityChips = document.querySelectorAll('.activity-chip');
+  activityChips.forEach(chip => {
+    chip.addEventListener('click', () => {
+      activityChips.forEach(c => c.classList.remove('active'));
+      chip.classList.add('active');
+      state.selectedActivity = chip.dataset.activity || chip.textContent.trim();
+      updateCelebrationWhatsApp();
+      showToast(`Selected date: ${state.selectedActivity} 💕`);
+    });
+  });
+
+  function updateCelebrationWhatsApp() {
+    const activity = state.selectedActivity || '🍕 Pizza & Romantic Movie Night';
+    const confirmationText = encodeURIComponent(
+      `Yaaay! 🥰 I said YES to being your Valentine! 💕💍\nOur Valentine Date: ${activity} 🌹✨\nCan't wait!`
+    );
+    const sendBtn = document.getElementById('sendLoveBackBtn');
+    if (sendBtn) {
+      sendBtn.onclick = () => {
+        window.open(`https://api.whatsapp.com/send?text=${confirmationText}`, '_blank');
+      };
+    }
   }
 
   function launchConfetti() {
@@ -472,7 +489,32 @@ document.addEventListener('DOMContentLoaded', () => {
       url.searchParams.set('yt', state.youtubeVideoId);
     }
 
-    generatedLink.value = url.toString();
+    const fullUrl = url.toString();
+    generatedLink.value = fullUrl;
+
+    // Update QR Code
+    updateQrCode(fullUrl);
+  }
+
+  const qrImage = document.getElementById('qrImage');
+  const downloadQrBtn = document.getElementById('downloadQrBtn');
+
+  function updateQrCode(linkUrl) {
+    if (!qrImage) return;
+    const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(linkUrl)}&color=ff2d55&bgcolor=ffffff&margin=8`;
+    qrImage.onerror = () => {
+      qrImage.src = `https://quickchart.io/qr?text=${encodeURIComponent(linkUrl)}&size=260&light=ffffff&dark=ff2d55&margin=2`;
+    };
+    qrImage.src = qrApiUrl;
+    qrImage.alt = `Proposal QR Code for ${linkUrl}`;
+  }
+
+  if (downloadQrBtn) {
+    downloadQrBtn.addEventListener('click', () => {
+      if (!qrImage || !qrImage.src) return;
+      window.open(qrImage.src, '_blank');
+      showToast("Opened QR Code! Save or share it 💕");
+    });
   }
 
   copyLinkBtn.addEventListener('click', () => {
