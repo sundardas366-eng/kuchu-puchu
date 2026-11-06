@@ -745,6 +745,60 @@ html, body {
   transform: scale(1.15);
 }
 
+/* Custom Date Input Wrap */
+.custom-date-wrap {
+  margin-top: 12px;
+  text-align: left;
+}
+
+.custom-date-input-box {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1.5px solid #ffd4e0;
+  border-radius: 14px;
+  padding: 8px 14px;
+  transition: all 0.25s ease;
+  box-shadow: 0 2px 10px rgba(244, 63, 94, 0.05);
+}
+
+.custom-date-input-box:focus-within {
+  border-color: var(--primary-pink);
+  box-shadow: 0 4px 16px rgba(255, 45, 85, 0.2);
+  transform: translateY(-1px);
+}
+
+.input-heart-icon {
+  font-size: 16px;
+  margin-right: 8px;
+  user-select: none;
+}
+
+.custom-date-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dark);
+  font-family: var(--font-main);
+  background: transparent;
+}
+
+.custom-date-input::placeholder {
+  color: #9ca3af;
+  font-weight: 500;
+}
+
+.custom-date-hint {
+  display: block;
+  font-size: 11px;
+  color: #9ca3af;
+  margin-top: 5px;
+  margin-left: 6px;
+  font-weight: 500;
+}
+
 /* QR Share Section */
 .qr-share-section {
   margin-top: 18px;

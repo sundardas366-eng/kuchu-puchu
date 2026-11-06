@@ -345,17 +345,56 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Interactive Valentine Date Activity Selection
+  // Interactive Valentine Date Activity Selection (Pre-made options + Custom input)
   const activityChips = document.querySelectorAll('.activity-chip');
+  const customDateInput = document.getElementById('customDateInput');
+
   activityChips.forEach(chip => {
     chip.addEventListener('click', () => {
       activityChips.forEach(c => c.classList.remove('active'));
       chip.classList.add('active');
-      state.selectedActivity = chip.dataset.activity || chip.textContent.trim();
+
+      if (chip.id === 'customIdeaChip') {
+        if (customDateInput) {
+          customDateInput.focus();
+          const customVal = customDateInput.value.trim();
+          state.selectedActivity = customVal ? ('✨ ' + customVal) : '✨ Our Special Dream Date';
+        }
+      } else {
+        state.selectedActivity = chip.dataset.activity || chip.textContent.trim();
+      }
+
       updateCelebrationWhatsApp();
       showToast(`Selected date: ${state.selectedActivity} 💕`);
     });
   });
+
+  if (customDateInput) {
+    customDateInput.addEventListener('input', () => {
+      const val = customDateInput.value.trim();
+      activityChips.forEach(c => c.classList.remove('active'));
+      const customChip = document.getElementById('customIdeaChip');
+      if (customChip) customChip.classList.add('active');
+
+      if (val) {
+        state.selectedActivity = '✨ ' + val;
+      } else {
+        state.selectedActivity = '🍕 Pizza & Romantic Movie Night';
+      }
+      updateCelebrationWhatsApp();
+    });
+
+    customDateInput.addEventListener('focus', () => {
+      activityChips.forEach(c => c.classList.remove('active'));
+      const customChip = document.getElementById('customIdeaChip');
+      if (customChip) customChip.classList.add('active');
+
+      if (customDateInput.value.trim()) {
+        state.selectedActivity = '✨ ' + customDateInput.value.trim();
+        updateCelebrationWhatsApp();
+      }
+    });
+  }
 
   function updateCelebrationWhatsApp() {
     let siteUrl = window.location.origin;

@@ -241,26 +241,45 @@
         <div class="date-planner-box">
           <div class="planner-title">🌹 Pick Our Valentine's Date Activity:</div>
           <div class="activity-options" id="activityOptions">
-            <button class="activity-chip active" data-activity="🍕 Pizza & Romantic Movie Night">
+            <button type="button" class="activity-chip active" data-activity="🍕 Pizza & Romantic Movie Night">
               <span class="chip-icon">🍕</span>
               <span class="chip-text">Pizza & Movie</span>
             </button>
-            <button class="activity-chip" data-activity="☕ Cozy Coffee & Sweet Talks">
+            <button type="button" class="activity-chip" data-activity="☕ Cozy Coffee & Sweet Talks">
               <span class="chip-icon">☕</span>
               <span class="chip-text">Coffee & Talks</span>
             </button>
-            <button class="activity-chip" data-activity="🍷 Candlelight Dinner & Dessert">
+            <button type="button" class="activity-chip" data-activity="🍷 Candlelight Dinner & Dessert">
               <span class="chip-icon">🍷</span>
               <span class="chip-text">Candlelight Dinner</span>
             </button>
-            <button class="activity-chip" data-activity="🚗 Late Night Long Drive & Music">
+            <button type="button" class="activity-chip" data-activity="🚗 Late Night Long Drive & Music">
               <span class="chip-icon">🚗</span>
               <span class="chip-text">Late Night Drive</span>
             </button>
-            <button class="activity-chip" data-activity="🍦 Ice Cream & Walk">
+            <button type="button" class="activity-chip" data-activity="🍦 Ice Cream & Walk">
               <span class="chip-icon">🍦</span>
               <span class="chip-text">Ice Cream & Walk</span>
             </button>
+            <button type="button" class="activity-chip custom-idea-chip" id="customIdeaChip" data-activity="custom">
+              <span class="chip-icon">✏️</span>
+              <span class="chip-text">My Own Idea...</span>
+            </button>
+          </div>
+
+          <!-- Custom Date Input Field (Write your own date plan) -->
+          <div class="custom-date-wrap" id="customDateWrap">
+            <div class="custom-date-input-box">
+              <span class="input-heart-icon">✍️</span>
+              <input 
+                type="text" 
+                id="customDateInput" 
+                class="custom-date-input" 
+                placeholder="Or write your own dream date idea... ✨" 
+                maxlength="100"
+              >
+            </div>
+            <small class="custom-date-hint">Type your favorite date plan & it will send on WhatsApp! 💕</small>
           </div>
         </div>
 
