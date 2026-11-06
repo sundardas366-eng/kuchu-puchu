@@ -178,10 +178,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     state.dodgeCount++;
 
-    // Shake bear cutely with loving pout wobble
+    // Switch to cute crying bear GIF when "No" is pressed / dodged
+    bearImg.src = 'assets/images/bear-sad.gif';
+    bearImg.alt = "Bear crying sadly";
     bearImg.classList.remove('bear-wobble');
     void bearImg.offsetWidth;
     bearImg.classList.add('bear-wobble');
+
+    // Update overlay emojis to crying tears & broken hearts
+    const bearHearts = document.getElementById('bearHearts');
+    if (bearHearts) {
+      bearHearts.innerHTML = '<span class="mini-heart h1">💧</span><span class="mini-heart h2">🥺</span><span class="mini-heart h3">💔</span>';
+    }
+
+    // Revert back to the loving hug after delay
+    clearTimeout(bearImg.revertTimeout);
+    bearImg.revertTimeout = setTimeout(() => {
+      bearImg.src = 'assets/images/bubu-dudu-hug.jpg';
+    bearImg.alt = "Bubu and Dudu warm romantic hug with hearts";
+    const bearHearts = document.getElementById('bearHearts');
+    if (bearHearts) {
+      bearHearts.innerHTML = '<span class="mini-heart h1">💖</span><span class="mini-heart h2">💕</span><span class="mini-heart h3">💗</span>';
+    }
+      bearImg.alt = "Bubu and Dudu warm romantic hug with hearts";
+      if (bearHearts) {
+        bearHearts.innerHTML = '<span class="mini-heart h1">💖</span><span class="mini-heart h2">💕</span><span class="mini-heart h3">💗</span>';
+      }
+    }, 2400);
 
     // Make "Yes" button grow bigger!
     state.yesScale = Math.min(1.65, 1.0 + state.dodgeCount * 0.08);
@@ -250,9 +273,25 @@ document.addEventListener('DOMContentLoaded', () => {
       runAwayButton(e);
     } else {
       showToast("Aww, don't break my heart! Please say YES! 🥺");
-      bearImg.classList.remove('bear-wobble');
-      void bearImg.offsetWidth;
-      bearImg.classList.add('bear-wobble');
+      bearImg.src = 'assets/images/bear-sad.gif';
+      bearImg.alt = "Bear crying sadly";
+      const bearHearts = document.getElementById('bearHearts');
+      if (bearHearts) {
+        bearHearts.innerHTML = '<span class="mini-heart h1">💧</span><span class="mini-heart h2">🥺</span><span class="mini-heart h3">💔</span>';
+      }
+      clearTimeout(bearImg.revertTimeout);
+      bearImg.revertTimeout = setTimeout(() => {
+        bearImg.src = 'assets/images/bubu-dudu-hug.jpg';
+    bearImg.alt = "Bubu and Dudu warm romantic hug with hearts";
+    const bearHearts = document.getElementById('bearHearts');
+    if (bearHearts) {
+      bearHearts.innerHTML = '<span class="mini-heart h1">💖</span><span class="mini-heart h2">💕</span><span class="mini-heart h3">💗</span>';
+    }
+        bearImg.alt = "Bubu and Dudu warm romantic hug with hearts";
+        if (bearHearts) {
+          bearHearts.innerHTML = '<span class="mini-heart h1">💖</span><span class="mini-heart h2">💕</span><span class="mini-heart h3">💗</span>';
+        }
+      }, 2500);
     }
   });
 
@@ -400,6 +439,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.card-content').style.display = 'block';
     document.querySelector('.bear-display-frame').style.display = 'flex';
     bearImg.src = 'assets/images/bubu-dudu-hug.jpg';
+    bearImg.alt = "Bubu and Dudu warm romantic hug with hearts";
+    const bearHearts = document.getElementById('bearHearts');
+    if (bearHearts) {
+      bearHearts.innerHTML = '<span class="mini-heart h1">💖</span><span class="mini-heart h2">💕</span><span class="mini-heart h3">💗</span>';
+    }
 
     showToast("Proposal card reset! 🌹");
   }
