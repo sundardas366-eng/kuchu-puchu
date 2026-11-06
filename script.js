@@ -178,12 +178,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     state.dodgeCount++;
 
-    // Switch bear to sad/pleading for a moment
-    bearImg.src = 'assets/images/bear-sad.gif';
-    clearTimeout(bearImg.revertTimeout);
-    bearImg.revertTimeout = setTimeout(() => {
-      bearImg.src = 'assets/images/bubu-dudu-stairs.jpg';
-    }, 1200);
+    // Shake bear cutely with loving pout wobble
+    bearImg.classList.remove('bear-wobble');
+    void bearImg.offsetWidth;
+    bearImg.classList.add('bear-wobble');
 
     // Make "Yes" button grow bigger!
     state.yesScale = Math.min(1.65, 1.0 + state.dodgeCount * 0.08);
@@ -243,7 +241,9 @@ document.addEventListener('DOMContentLoaded', () => {
       runAwayButton(e);
     } else {
       showToast("Aww, don't break my heart! Please say YES! 🥺");
-      bearImg.src = 'assets/images/bear-sad.gif';
+      bearImg.classList.remove('bear-wobble');
+      void bearImg.offsetWidth;
+      bearImg.classList.add('bear-wobble');
     }
   });
 
@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
     buttonsContainer.style.display = 'flex';
     document.querySelector('.card-content').style.display = 'block';
     document.querySelector('.bear-display-frame').style.display = 'flex';
-    bearImg.src = 'assets/images/bubu-dudu-stairs.jpg';
+    bearImg.src = 'assets/images/bubu-dudu-hug.jpg';
 
     showToast("Proposal card reset! 🌹");
   }
@@ -818,19 +818,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Try immediate autoplay with local love-story.mp3
   function startPlayback() {
-    if (bgAudio) {
-      bgAudio.volume = state.volume;
-      const p = bgAudio.play();
-      if (p !== undefined) {
-        p.then(() => {
-          state.isPlayingSound = true;
-          updateSoundUI();
-          hideAudioHint();
-        }).catch(err => {
-          // Autoplay blocked by mobile browser until first touch
-          showAudioHint();
-        });
-      }
+    if (!bgAudio) return;
+
+    // First attempt: direct unmuted playback
+    bgAudio.muted = false;
+    bgAudio.volume = state.volume;
+    const p = bgAudio.play();
+
+    if (p !== undefined) {
+      p.then(() => {
+        state.isPlayingSound = true;
+        updateSoundUI();
+        hideAudioHint();
+      }).catch(() => {
+        // Unmuted playback restricted by browser policy before first interaction.
+        // Second attempt: start muted so browser allows audio to stream/buffer right away!
+        bgAudio.muted = true;
+        bgAudio.play().catch(() => {});
+        showAudioHint();
+      });
     }
   }
 
@@ -838,9 +844,13 @@ document.addEventListener('DOMContentLoaded', () => {
   startPlayback();
   window.addEventListener('load', startPlayback);
 
-  // Seamless WhatsApp auto-start: The very millisecond the user touches, scrolls or taps the screen
+  // Seamless WhatsApp auto-start: The very millisecond the user touches, scrolls, or taps the screen
   function triggerAudioOnGesture() {
+    initAudioContext();
     if (bgAudio) {
+      if (bgAudio.muted) {
+        bgAudio.muted = false;
+      }
       bgAudio.volume = state.volume;
       if (bgAudio.paused) {
         bgAudio.play().then(() => {
@@ -856,8 +866,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  ['touchstart', 'pointerdown', 'click', 'scroll', 'touchend', 'keydown'].forEach(evt => {
+  const gestureEvents = [
+    'touchstart', 'touchend', 'touchmove', 
+    'pointerdown', 'pointerup', 
+    'mousedown', 'mouseup', 
+    'click', 'scroll', 'keydown'
+  ];
+
+  gestureEvents.forEach(evt => {
     window.addEventListener(evt, triggerAudioOnGesture, { passive: true });
     document.addEventListener(evt, triggerAudioOnGesture, { passive: true });
+  });
+
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && !state.isPlayingSound) {
+      triggerAudioOnGesture();
+    }
   });
 });
