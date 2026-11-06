@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Will you be my Valentine? 🌹</title>
+  <meta name="description" content="The timeless classic proposal - Ask your Valentine with an interactive dodging card!">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌹</text></svg>">
+  
+  <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
+  
+  <!-- Canvas Confetti Library for spectacular celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Floating background decorations (Hearts, Roses, Sparkles) -->
+  <div class="bg-decorations" id="bgDecorations" aria-hidden="true"></div>
+
+  <!-- Top Navigation Bar -->
+  <header class="top-nav">
+    <div class="nav-left">
+      <!-- Question selector dropdown button -->
+      <div class="dropdown-wrapper">
+        <button class="pill-badge question-pill" id="questionDropdownBtn" aria-label="Select Question">
+          <span class="pill-tag">QUESTION</span>
+          <span class="pill-title">
+            <span class="q-icon" id="currentQIcon">🌹</span>
+            <span class="q-text" id="currentQText">Will you be my Valentine?</span>
+            <svg class="chevron-icon" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+            </svg>
+          </span>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div class="dropdown-menu" id="questionDropdownMenu">
+          <div class="dropdown-header">Choose a Proposal Style</div>
+          <button class="dropdown-item active" data-q="Will you be my Valentine?" data-sub="The timeless classic proposal 🌹" data-icon="🌹">
+            <span class="item-icon">🌹</span>
+            <span class="item-info">
+              <strong>Will you be my Valentine?</strong>
+              <small>The timeless classic proposal</small>
+            </span>
+          </button>
+          <button class="dropdown-item" data-q="Will you go on a date with me?" data-sub="Coffee, sweet talks & cozy laughs ☕" data-icon="☕">
+            <span class="item-icon">☕</span>
+            <span class="item-info">
+              <strong>Will you go on a date with me?</strong>
+              <small>Coffee, sweet talks & cozy laughs</small>
+            </span>
+          </button>
+          <button class="dropdown-item" data-q="Do you love me?" data-sub="There is only one correct answer! 💖" data-icon="💖">
+            <span class="item-icon">💖</span>
+            <span class="item-info">
+              <strong>Do you love me?</strong>
+              <small>There is only one correct answer!</small>
+            </span>
+          </button>
+          <button class="dropdown-item" data-q="Can I have a sweet kiss?" data-sub="A little spark of romantic magic 💋" data-icon="💋">
+            <span class="item-icon">💋</span>
+            <span class="item-info">
+              <strong>Can I have a sweet kiss?</strong>
+              <small>A little spark of romantic magic</small>
+            </span>
+          </button>
+          <button class="dropdown-item" data-q="Will you be my girlfriend?" data-sub="Making it officially official 💑" data-icon="💑">
+            <span class="item-icon">💑</span>
+            <span class="item-info">
+              <strong>Will you be my girlfriend?</strong>
+              <small>Making it officially official</small>
+            </span>
+          </button>
+          <button class="dropdown-item" data-q="Be my forever and always?" data-sub="A promise for eternity 💍" data-icon="💍">
+            <span class="item-icon">💍</span>
+            <span class="item-info">
+              <strong>Be my forever and always?</strong>
+              <small>A promise for eternity</small>
+            </span>
+          </button>
+          <div class="dropdown-divider"></div>
+          <button class="dropdown-item custom-q-btn" id="customQuestionBtn">
+            <span class="item-icon">✏️</span>
+            <span class="item-info">
+              <strong>Create Custom Question...</strong>
+              <small>Write your own romantic message</small>
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Author badge -->
+      <button class="pill-badge author-pill" id="authorBadge" title="Click to customize creator name">
+        <span class="heart-icon">❤️</span>
+        <span>by <strong id="creatorName">hxni</strong></span>
+        <span class="edit-hint">✎</span>
+      </button>
+    </div>
+
+    <!-- Top Right Controls -->
+    <div class="nav-right">
+      <!-- Share button -->
+      <button class="pill-btn share-btn" id="shareBtn" title="Share with your crush">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+        </svg>
+        <span>Share</span>
+      </button>
+
+      <!-- Runaway mode toggle -->
+      <button class="pill-btn toggle-btn active" id="runawayBtn" title="Toggle Runaway 'No' button">
+        <span class="toggle-icon">⚡</span>
+        <span>Runaway</span>
+        <span class="status-dot"></span>
+      </button>
+
+      <!-- Music Settings / YouTube link button -->
+      <button class="pill-btn icon-btn" id="musicSettingsBtn" title="Change Song / YouTube Link">
+        <span class="music-note">🎵</span>
+      </button>
+
+      <!-- Sound Mute/Play toggle -->
+      <button class="pill-btn icon-btn" id="soundBtn" title="Toggle Sound">
+        <div class="sound-wave-icon" id="soundIcon">
+          <svg class="speaker-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path class="wave-1" d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            <path class="wave-2" d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+          </svg>
+        </div>
+      </button>
+
+      <!-- Reset button -->
+      <button class="pill-btn icon-btn" id="resetBtn" title="Restart Card">
+        <svg class="reset-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Proposal Container -->
+  <main class="proposal-wrapper">
+    <div class="proposal-card" id="proposalCard">
+      
+      <!-- Recipient Greeting (optional via ?to=Name) -->
+      <div class="recipient-tag" id="recipientTag" style="display: none;">
+        <span>Hey <strong id="recipientName">Cutie</strong>, I have a question for you... 💌</span>
+      </div>
+
+      <!-- Bear Illustration Area -->
+      <div class="bear-display-frame">
+        <div class="bear-img-wrapper" id="bearWrapper">
+          <img 
+            src="assets/images/bear-proposal.png" 
+            alt="Cute brown bear with red rose" 
+            class="bear-image proposal-bear" 
+            id="bearImg"
+          >
+          <div class="floating-hearts-overlay" id="bearHearts">
+            <span class="mini-heart h1">💖</span>
+            <span class="mini-heart h2">💕</span>
+            <span class="mini-heart h3">💗</span>
+          </div>
+        </div>
+        <div class="corner-rose" aria-hidden="true">🌹</div>
+      </div>
+
+      <!-- Question Text -->
+      <div class="card-content">
+        <h1 class="card-title" id="cardTitle">Will you be my Valentine?</h1>
+        <p class="card-subtitle" id="cardSubtitle">The timeless classic proposal 🌹</p>
+      </div>
+
+      <!-- Proposal Action Buttons -->
+      <div class="buttons-container" id="buttonsContainer">
+        <!-- Yes Button (Glows green) -->
+        <button class="btn-yes" id="btnYes">
+          <span class="btn-text">Yes! Absolutely! 💖</span>
+        </button>
+
+        <!-- No Button (Dodges away) -->
+        <button class="btn-no" id="btnNo">
+          <span class="btn-text">No</span>
+        </button>
+      </div>
+
+      <!-- Dodging Bubble Tooltip -->
+      <div class="dodge-tooltip" id="dodgeTooltip">Nice try! 😉</div>
+
+      <!-- Victory / Celebrated State (Hidden initially) -->
+      <div class="celebration-view" id="celebrationView" style="display: none;">
+        <div class="celebrate-bear-frame">
+          <img 
+            src="assets/images/bear-celebrate.gif" 
+            alt="Bears kissing and celebrating" 
+            class="celebrate-gif" 
+            id="celebrateGif"
+          >
+        </div>
+        <h2 class="celebrate-title">Yaaay! I knew you'd say Yes! 🥰🎉</h2>
+        <p class="celebrate-subtitle">Best decision ever! You just made my entire year! 💍✨</p>
+
+        <div class="love-note-box">
+          <div class="love-note-header">💌 A Special Note for You</div>
+          <p class="love-note-body" id="loveNoteMessage">
+            "I promise to always bring you snacks, give you warm hugs, and never let you stay mad for more than 5 minutes! Happy Valentine's Day! 💕"
+          </p>
+        </div>
+
+        <div class="celebrate-actions">
+          <button class="pill-btn share-celebrate-btn" id="sendLoveBackBtn">
+            <span>💬 Send Confirmation on WhatsApp</span>
+          </button>
+          <button class="pill-btn secondary-btn" id="replayCelebrationBtn">
+            <span>↺ Replay Experience</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bottom-footer">
+    <div class="footer-badge">
+      <span>Crafted with ❤️ by <span id="footerAuthor">hxni</span></span>
+    </div>
+    <div class="footer-links">
+      <span>16+ Questions</span>
+      <span class="dot">•</span>
+      <a href="#privacy" id="privacyLink">Privacy Policy</a>
+      <span class="dot">•</span>
+      <span>Fitted for iOS & Desktop</span>
+    </div>
+  </footer>
+
+  <!-- ==================== MODALS ==================== -->
+
+  <!-- Share Modal -->
+  <div class="modal-overlay" id="shareModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Share Your Proposal 💌</h3>
+        <button class="modal-close" id="closeShareModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">Send this personalized link to your crush or partner. They won't be able to say No! 😉</p>
+        
+        <div class="form-group">
+          <label for="inputCrushName">Their Name (Crush / Partner):</label>
+          <input type="text" id="inputCrushName" placeholder="e.g. Priyanshu, Ananya, Babe..." maxlength="30">
+        </div>
+
+        <div class="form-group">
+          <label for="inputSenderName">Your Name:</label>
+          <input type="text" id="inputSenderName" placeholder="e.g. Rahul, hxni..." maxlength="30">
+        </div>
+
+        <div class="form-group">
+          <label>Your Custom Proposal Link:</label>
+          <div class="link-copy-box">
+            <input type="text" id="generatedLink" readonly>
+            <button class="btn-copy" id="copyLinkBtn">Copy Link</button>
+          </div>
+        </div>
+
+        <div class="share-options-row">
+          <button class="share-platform-btn whatsapp" id="shareWhatsappBtn">
+            <span>🟢 Share on WhatsApp</span>
+          </button>
+          <button class="share-platform-btn preview-link" id="previewLinkBtn">
+            <span>👀 Open Preview</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Music / Song Settings Modal (User can add YouTube / MP3 / local song) -->
+  <div class="modal-overlay" id="musicModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>🎵 Song & Background Music</h3>
+        <button class="modal-close" id="closeMusicModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">
+          Add your favourite romantic song! You can paste a <strong>YouTube Link</strong> or an <strong>MP3 URL</strong>, or use our romantic music-box melody.
+        </p>
+
+        <!-- Song Source Tabs -->
+        <div class="music-tabs">
+          <button class="music-tab active" data-tab="youtube">YouTube Song</button>
+          <button class="music-tab" data-tab="mp3">Audio / MP3 Link</button>
+          <button class="music-tab" data-tab="synth">Romantic Melody</button>
+        </div>
+
+        <!-- YouTube Tab -->
+        <div class="tab-pane active" id="tabYoutube">
+          <div class="form-group">
+            <label for="youtubeUrlInput">YouTube Song URL:</label>
+            <input 
+              type="text" 
+              id="youtubeUrlInput" 
+              placeholder="e.g. https://www.youtube.com/watch?v=... or https://youtu.be/..."
+            >
+            <small class="input-hint">Paste any song link from YouTube (Bollywood romantic, Taylor Swift, Lo-Fi, etc.)</small>
+          </div>
+          <button class="btn-primary" id="applyYoutubeBtn">▶️ Play YouTube Song</button>
+        </div>
+
+        <!-- MP3 Tab -->
+        <div class="tab-pane" id="tabMp3">
+          <div class="form-group">
+            <label for="mp3UrlInput">Direct Audio / MP3 URL:</label>
+            <input 
+              type="text" 
+              id="mp3UrlInput" 
+              placeholder="https://example.com/romantic-song.mp3"
+            >
+            <small class="input-hint">Or drop any .mp3 file into <code>assets/audio/song.mp3</code></small>
+          </div>
+          <button class="btn-primary" id="applyMp3Btn">▶️ Play MP3 Track</button>
+        </div>
+
+        <!-- Synth Tab -->
+        <div class="tab-pane" id="tabSynth">
+          <p class="tab-info">Plays an ambient acoustic music-box romantic chord progression in real-time. Works offline anywhere!</p>
+          <button class="btn-primary" id="applySynthBtn">✨ Use Romantic Music Box</button>
+        </div>
+
+        <!-- Volume Control -->
+        <div class="volume-slider-group">
+          <label for="volumeSlider">Volume:</label>
+          <input type="range" id="volumeSlider" min="0" max="1" step="0.05" value="0.7">
+          <span id="volumeValue">70%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Question Creator Modal -->
+  <div class="modal-overlay" id="customQModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Create Your Own Question ✍️</h3>
+        <button class="modal-close" id="closeCustomQModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="inputCustomQ">Your Question:</label>
+          <input type="text" id="inputCustomQ" placeholder="e.g. Will you be my dinner date tonight? 💕" maxlength="80">
+        </div>
+        <div class="form-group">
+          <label for="inputCustomSub">Subtitle / Sweet Hint:</label>
+          <input type="text" id="inputCustomSub" placeholder="e.g. I promise you'll get desserts! 🍰" maxlength="100">
+        </div>
+        <div class="form-group">
+          <label for="inputCustomIcon">Icon / Emoji:</label>
+          <input type="text" id="inputCustomIcon" placeholder="🌹, 💖, 🍦, 💍" maxlength="4" value="💖">
+        </div>
+        <button class="btn-primary" id="saveCustomQBtn">Save & Apply Question</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-notification" id="toastNotification">Link copied to clipboard! 📋</div>
+
+  <!-- Hidden YouTube Audio IFrame Player -->
+  <div id="youtubePlayerContainer" style="display: none; position: absolute; pointer-events: none; width: 1px; height: 1px; opacity: 0;"></div>
+
+  <!-- HTML5 Audio Element for local/mp3 audio -->
+  <audio id="bgAudio" preload="auto" loop></audio>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
