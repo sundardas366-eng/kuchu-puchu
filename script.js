@@ -312,10 +312,24 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function updateCelebrationWhatsApp() {
+    let siteUrl = window.location.origin;
+    if (!siteUrl || siteUrl === 'null' || window.location.protocol === 'file:') {
+      siteUrl = 'https://kuchu-puchu-sigma.vercel.app';
+    }
     const activity = state.selectedActivity || '🍕 Pizza & Romantic Movie Night';
-    const confirmationText = encodeURIComponent(
-      `Yaaay! 🥰 I said YES to being your Valentine! 💕💍\nOur Valentine Date: ${activity} 🌹✨\nCan't wait!`
-    );
+    const crushGreeting = state.creatorName && state.creatorName !== 'Eagle' ? `Hey ${state.creatorName}, ` : '';
+
+    const messageLines = [
+      `${crushGreeting}Yaaay! 🥰 I said YES to being your Valentine! 💕💍`,
+      ``,
+      `🌹 Our Valentine Date: ${activity} ✨`,
+      `You just made my day so special! 🥰`,
+      ``,
+      `💌 Make or share your own cute proposal here:`,
+      `👉 ${siteUrl}`
+    ];
+
+    const confirmationText = encodeURIComponent(messageLines.join('\n'));
     const sendBtn = document.getElementById('sendLoveBackBtn');
     if (sendBtn) {
       sendBtn.onclick = () => {
