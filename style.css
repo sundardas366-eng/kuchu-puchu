@@ -657,7 +657,7 @@ html, body {
   border: 1px dashed #ffb8c9;
   border-radius: 18px;
   padding: 16px 20px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   text-align: left;
 }
 
@@ -675,6 +675,92 @@ html, body {
   font-size: 20px;
   line-height: 1.4;
   color: #4a1d27;
+}
+
+/* Date Planner Box */
+.date-planner-box {
+  background: #fdf2f4;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 22px;
+  text-align: left;
+}
+
+.planner-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--primary-pink);
+  margin-bottom: 10px;
+}
+
+.activity-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.activity-chip {
+  background: #ffffff;
+  border: 1.5px solid #ffd4e0;
+  border-radius: var(--pill-radius);
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-dark);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: var(--font-main);
+}
+
+.activity-chip:hover {
+  transform: translateY(-1px);
+  border-color: var(--primary-pink);
+}
+
+.activity-chip.active {
+  background: var(--primary-pink);
+  color: #ffffff;
+  border-color: var(--primary-pink);
+  box-shadow: 0 4px 12px rgba(255, 45, 85, 0.3);
+}
+
+.activity-chip.active .chip-icon {
+  transform: scale(1.15);
+}
+
+/* QR Share Section */
+.qr-share-section {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed #ffd4e0;
+  text-align: center;
+}
+
+.qr-preview-card {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: #fff8f9;
+  border-radius: 18px;
+  padding: 14px;
+  border: 1px solid #ffd4e0;
+}
+
+.qr-img {
+  width: 160px;
+  height: 160px;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.qr-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
 }
 
 /* Celebrate Action Buttons */
@@ -1026,6 +1112,39 @@ html, body {
   opacity: 1;
   visibility: visible;
   transform: translateX(-50%) translateY(0);
+}
+
+/* Floating Music Autoplay Hint (Pulse effect) */
+.music-autoplay-hint {
+  position: fixed;
+  top: 75px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background: linear-gradient(135deg, #ff2d55 0%, #ff4b72 100%);
+  color: #ffffff;
+  padding: 10px 22px;
+  border-radius: var(--pill-radius);
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 8px 25px rgba(255, 45, 85, 0.45);
+  z-index: 9999;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: pulseHint 1.8s infinite ease-in-out;
+  white-space: nowrap;
+}
+
+.music-autoplay-hint.visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+@keyframes pulseHint {
+  0%, 100% { transform: translateX(-50%) scale(1); }
+  50% { transform: translateX(-50%) scale(1.05); }
 }
 
 /* ================= RESPONSIVE ================= */

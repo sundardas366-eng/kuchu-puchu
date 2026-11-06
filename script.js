@@ -182,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     bearImg.src = 'assets/images/bear-sad.gif';
     clearTimeout(bearImg.revertTimeout);
     bearImg.revertTimeout = setTimeout(() => {
-      bearImg.src = 'assets/images/bear-proposal.png';
+      bearImg.src = 'assets/images/bubu-dudu-stairs.jpg';
     }, 1200);
 
     // Make "Yes" button grow bigger!
@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
     buttonsContainer.style.display = 'flex';
     document.querySelector('.card-content').style.display = 'block';
     document.querySelector('.bear-display-frame').style.display = 'flex';
-    bearImg.src = 'assets/images/bear-proposal.png';
+    bearImg.src = 'assets/images/bubu-dudu-stairs.jpg';
 
     showToast("Proposal card reset! 🌹");
   }
@@ -789,6 +789,33 @@ document.addEventListener('DOMContentLoaded', () => {
   createFloatingDecorations();
   parseUrlParams();
 
+  function showAudioHint() {
+    let hint = document.getElementById('musicAutoplayHint');
+    if (!hint) {
+      hint = document.createElement('div');
+      hint.id = 'musicAutoplayHint';
+      hint.className = 'music-autoplay-hint';
+      hint.innerHTML = '<span>🎵 Tap anywhere to hear our song 💕</span>';
+      document.body.appendChild(hint);
+
+      hint.addEventListener('click', (e) => {
+        e.stopPropagation();
+        triggerAudioOnGesture();
+      });
+    }
+    requestAnimationFrame(() => {
+      hint.classList.add('visible');
+    });
+  }
+
+  function hideAudioHint() {
+    const hint = document.getElementById('musicAutoplayHint');
+    if (hint) {
+      hint.classList.remove('visible');
+      setTimeout(() => hint.remove(), 400);
+    }
+  }
+
   // Try immediate autoplay with local love-story.mp3
   function startPlayback() {
     if (bgAudio) {
@@ -798,8 +825,10 @@ document.addEventListener('DOMContentLoaded', () => {
         p.then(() => {
           state.isPlayingSound = true;
           updateSoundUI();
+          hideAudioHint();
         }).catch(err => {
-          // Will start on first screen touch
+          // Autoplay blocked by mobile browser until first touch
+          showAudioHint();
         });
       }
     }
@@ -811,16 +840,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Seamless WhatsApp auto-start: The very millisecond the user touches, scrolls or taps the screen
   function triggerAudioOnGesture() {
-    if (bgAudio && bgAudio.paused && state.isPlayingSound) {
+    if (bgAudio) {
       bgAudio.volume = state.volume;
-      bgAudio.play().then(() => {
+      if (bgAudio.paused) {
+        bgAudio.play().then(() => {
+          state.isPlayingSound = true;
+          updateSoundUI();
+          hideAudioHint();
+        }).catch(() => {});
+      } else {
         state.isPlayingSound = true;
         updateSoundUI();
-      }).catch(() => {});
+        hideAudioHint();
+      }
     }
   }
 
-  ['touchstart', 'pointerdown', 'click', 'scroll', 'touchend'].forEach(evt => {
+  ['touchstart', 'pointerdown', 'click', 'scroll', 'touchend', 'keydown'].forEach(evt => {
     window.addEventListener(evt, triggerAudioOnGesture, { passive: true });
     document.addEventListener(evt, triggerAudioOnGesture, { passive: true });
   });
