@@ -225,14 +225,23 @@ document.addEventListener('DOMContentLoaded', () => {
     playDodgeSound();
   }
 
-  // Hover and Touch handlers for runaway
+  // Hover, Pointer and Touch handlers for runaway
   btnNo.addEventListener('mouseenter', (e) => {
     runAwayButton(e);
   });
 
+  btnNo.addEventListener('pointerdown', (e) => {
+    if (state.runawayEnabled) {
+      e.preventDefault();
+      runAwayButton(e);
+    }
+  });
+
   btnNo.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    runAwayButton(e);
+    if (state.runawayEnabled) {
+      e.preventDefault();
+      runAwayButton(e);
+    }
   }, { passive: false });
 
   btnNo.addEventListener('click', (e) => {
