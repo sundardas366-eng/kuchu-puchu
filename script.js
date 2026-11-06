@@ -8,13 +8,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const state = {
     runawayEnabled: true,
     dodgeCount: 0,
-    isPlayingSound: false,
-    soundSource: 'local', // 'local', 'synth', 'youtube', 'mp3'
+    isPlayingSound: true,
+    hasUserInteracted: false,
+    soundSource: 'youtube', // Default to YouTube song
     localAudioPath: 'assets/audio/default-music.wav',
-    youtubeVideoId: '',
+    youtubeVideoId: '2Bc9ET7XGDg', // Indila - Love Story (Lyrics)
     mp3Url: '',
-    volume: 0.7,
-    creatorName: 'hxni',
+    volume: 0.85,
+    creatorName: 'Eagle',
     recipientName: '',
     currentQuestion: 'Will you be my Valentine?',
     currentSubtitle: 'The timeless classic proposal 🌹',
@@ -147,6 +148,10 @@ document.addEventListener('DOMContentLoaded', () => {
       creatorNameEl.textContent = from;
       footerAuthorEl.textContent = from;
       inputSenderName.value = from;
+    } else {
+      creatorNameEl.textContent = 'Eagle';
+      footerAuthorEl.textContent = 'Eagle';
+      inputSenderName.value = 'Eagle';
     }
 
     if (q) {
@@ -458,7 +463,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const pathname = window.location.protocol === 'file:' ? '/' : window.location.pathname;
     const url = new URL(base + pathname);
     if (state.recipientName) url.searchParams.set('to', state.recipientName);
-    if (state.creatorName && state.creatorName !== 'hxni') url.searchParams.set('from', state.creatorName);
+    if (state.creatorName && state.creatorName !== 'Eagle') url.searchParams.set('from', state.creatorName);
     if (state.currentQuestion !== 'Will you be my Valentine?') {
       url.searchParams.set('q', state.currentQuestion);
       url.searchParams.set('sub', state.currentSubtitle);
@@ -644,11 +649,57 @@ document.addEventListener('DOMContentLoaded', () => {
     state.soundSource = 'youtube';
 
     const container = document.getElementById('youtubePlayerContainer');
-    container.innerHTML = `<iframe id="ytFrame" width="200" height="200" src="https://www.youtube.com/embed/${videoId}?autoplay=1&loop=1&playlist=${videoId}&enablejsapi=1" frameborder="0" allow="autoplay"></iframe>`;
+    if (!container) return;
+
+    if (window.YT && window.YT.Player) {
+      if (state.ytPlayer && typeof state.ytPlayer.loadVideoById === 'function') {
+        try {
+          state.ytPlayer.loadVideoById(videoId);
+          state.ytPlayer.unMute();
+          state.ytPlayer.setVolume(Math.round(state.volume * 100));
+          state.ytPlayer.playVideo();
+        } catch (e) {
+          createIframeFallback(videoId);
+        }
+      } else {
+        container.innerHTML = '<div id="ytPlayerDiv"></div>';
+        try {
+          state.ytPlayer = new YT.Player('ytPlayerDiv', {
+            height: '10',
+            width: '10',
+            videoId: videoId,
+            playerVars: {
+              autoplay: 1,
+              loop: 1,
+              playlist: videoId,
+              playsinline: 1,
+              controls: 0,
+              enablejsapi: 1
+            },
+            events: {
+              onReady: (event) => {
+                event.target.unMute();
+                event.target.setVolume(Math.round(state.volume * 100));
+                event.target.playVideo();
+              }
+            }
+          });
+        } catch (e) {
+          createIframeFallback(videoId);
+        }
+      }
+    } else {
+      createIframeFallback(videoId);
+    }
 
     state.isPlayingSound = true;
     updateSoundUI();
-    showToast("Playing YouTube song! 🎵");
+  }
+
+  function createIframeFallback(videoId) {
+    const container = document.getElementById('youtubePlayerContainer');
+    if (!container) return;
+    container.innerHTML = `<iframe id="ytFrame" width="10" height="10" src="https://www.youtube.com/embed/${videoId}?autoplay=1&enablejsapi=1&loop=1&playlist=${videoId}&playsinline=1" frameborder="0" allow="autoplay; encrypted-media"></iframe>`;
   }
 
   // Music Settings Modal
@@ -734,13 +785,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 2400);
   }
 
-  // ================= INITIALIZE =================
+  // ================= INITIALIZE & AUTOPLAY =================
   createFloatingDecorations();
   parseUrlParams();
 
-  // User interaction hint for music
-  document.body.addEventListener('click', function onFirstClick() {
-    initAudioContext();
-    document.body.removeEventListener('click', onFirstClick);
-  }, { once: true });
+  // Try to autoplay music immediately on page load
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      toggleSound(true);
+    }, 300);
+  });
+
+  // Seamless fallback: Start music on the very first touch/click anywhere on the screen
+  function triggerAudioOnGesture() {
+    if (!state.hasUserInteracted) {
+      state.hasUserInteracted = true;
+      initAudioContext();
+      if (!state.isPlayingSound) {
+        toggleSound(true);
+      } else if (state.soundSource === 'youtube') {
+        if (state.ytPlayer && typeof state.ytPlayer.playVideo === 'function') {
+          try {
+            state.ytPlayer.unMute();
+            state.ytPlayer.setVolume(Math.round(state.volume * 100));
+            state.ytPlayer.playVideo();
+          } catch (e) {}
+        }
+      }
+    }
+  }
+
+  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+    document.addEventListener(evt, triggerAudioOnGesture, { passive: true });
+  });
 });

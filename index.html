@@ -28,6 +28,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
   
+  <!-- YouTube IFrame API for seamless background music playback -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+
   <!-- Canvas Confetti Library for spectacular celebration -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
@@ -112,7 +115,7 @@
       <!-- Author badge -->
       <button class="pill-badge author-pill" id="authorBadge" title="Click to customize creator name">
         <span class="heart-icon">❤️</span>
-        <span>by <strong id="creatorName">hxni</strong></span>
+        <span>by <strong id="creatorName">Eagle</strong></span>
         <span class="edit-hint">✎</span>
       </button>
     </div>
@@ -248,9 +251,11 @@
   <!-- Footer -->
   <footer class="bottom-footer">
     <div class="footer-badge">
-      <span>Crafted with ❤️ by <span id="footerAuthor">hxni</span></span>
+      <span>Crafted with ❤️ by <span id="footerAuthor">Eagle</span> • <strong>Developer by Eagle</strong></span>
     </div>
     <div class="footer-links">
+      <span style="font-weight: 700; color: #ff2d55;">Developer by Eagle</span>
+      <span class="dot">•</span>
       <span>16+ Questions</span>
       <span class="dot">•</span>
       <a href="#privacy" id="privacyLink">Privacy Policy</a>
@@ -327,9 +332,10 @@
             <input 
               type="text" 
               id="youtubeUrlInput" 
+              value="https://youtu.be/2Bc9ET7XGDg"
               placeholder="e.g. https://www.youtube.com/watch?v=... or https://youtu.be/..."
             >
-            <small class="input-hint">Paste any song link from YouTube (Bollywood romantic, Taylor Swift, Lo-Fi, etc.)</small>
+            <small class="input-hint">Now Playing: Indila - Love Story (Lyrics)</small>
           </div>
           <button class="btn-primary" id="applyYoutubeBtn">▶️ Play YouTube Song</button>
         </div>
@@ -393,7 +399,7 @@
   <div class="toast-notification" id="toastNotification">Link copied to clipboard! 📋</div>
 
   <!-- Hidden YouTube Audio IFrame Player -->
-  <div id="youtubePlayerContainer" style="display: none; position: absolute; pointer-events: none; width: 1px; height: 1px; opacity: 0;"></div>
+  <div id="youtubePlayerContainer" style="position: fixed; bottom: -120px; right: -120px; width: 10px; height: 10px; opacity: 0.001; pointer-events: none; z-index: -999;"></div>
 
   <!-- HTML5 Audio Element for local/mp3 audio -->
   <audio id="bgAudio" preload="auto" loop></audio>
