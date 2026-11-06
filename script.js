@@ -10,9 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     dodgeCount: 0,
     isPlayingSound: true,
     hasUserInteracted: false,
-    soundSource: 'youtube', // Default to YouTube song
-    localAudioPath: 'assets/audio/default-music.wav',
-    youtubeVideoId: '2Bc9ET7XGDg', // Indila - Love Story (Lyrics)
+    soundSource: 'local', // Direct MP3 track (Indila - Love Story) for instant, 100% reliable autoplay in WhatsApp
+    localAudioPath: 'assets/audio/love-story.mp3',
+    youtubeVideoId: '2Bc9ET7XGDg', // Indila - Love Story
     mp3Url: '',
     volume: 0.85,
     creatorName: 'Eagle',
@@ -789,33 +789,39 @@ document.addEventListener('DOMContentLoaded', () => {
   createFloatingDecorations();
   parseUrlParams();
 
-  // Try to autoplay music immediately on page load
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      toggleSound(true);
-    }, 300);
-  });
-
-  // Seamless fallback: Start music on the very first touch/click anywhere on the screen
-  function triggerAudioOnGesture() {
-    if (!state.hasUserInteracted) {
-      state.hasUserInteracted = true;
-      initAudioContext();
-      if (!state.isPlayingSound) {
-        toggleSound(true);
-      } else if (state.soundSource === 'youtube') {
-        if (state.ytPlayer && typeof state.ytPlayer.playVideo === 'function') {
-          try {
-            state.ytPlayer.unMute();
-            state.ytPlayer.setVolume(Math.round(state.volume * 100));
-            state.ytPlayer.playVideo();
-          } catch (e) {}
-        }
+  // Try immediate autoplay with local love-story.mp3
+  function startPlayback() {
+    if (bgAudio) {
+      bgAudio.volume = state.volume;
+      const p = bgAudio.play();
+      if (p !== undefined) {
+        p.then(() => {
+          state.isPlayingSound = true;
+          updateSoundUI();
+        }).catch(err => {
+          // Will start on first screen touch
+        });
       }
     }
   }
 
-  ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+  // Attempt immediately & on window load
+  startPlayback();
+  window.addEventListener('load', startPlayback);
+
+  // Seamless WhatsApp auto-start: The very millisecond the user touches, scrolls or taps the screen
+  function triggerAudioOnGesture() {
+    if (bgAudio && bgAudio.paused && state.isPlayingSound) {
+      bgAudio.volume = state.volume;
+      bgAudio.play().then(() => {
+        state.isPlayingSound = true;
+        updateSoundUI();
+      }).catch(() => {});
+    }
+  }
+
+  ['touchstart', 'pointerdown', 'click', 'scroll', 'touchend'].forEach(evt => {
+    window.addEventListener(evt, triggerAudioOnGesture, { passive: true });
     document.addEventListener(evt, triggerAudioOnGesture, { passive: true });
   });
 });

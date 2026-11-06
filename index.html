@@ -235,6 +235,33 @@
           </p>
         </div>
 
+        <!-- Interactive Date Activity Planner -->
+        <div class="date-planner-box">
+          <div class="planner-title">🌹 Pick Our Valentine's Date Activity:</div>
+          <div class="activity-options" id="activityOptions">
+            <button class="activity-chip active" data-activity="🍕 Pizza & Romantic Movie Night">
+              <span class="chip-icon">🍕</span>
+              <span class="chip-text">Pizza & Movie</span>
+            </button>
+            <button class="activity-chip" data-activity="☕ Cozy Coffee & Sweet Talks">
+              <span class="chip-icon">☕</span>
+              <span class="chip-text">Coffee & Talks</span>
+            </button>
+            <button class="activity-chip" data-activity="🍷 Candlelight Dinner & Dessert">
+              <span class="chip-icon">🍷</span>
+              <span class="chip-text">Candlelight Dinner</span>
+            </button>
+            <button class="activity-chip" data-activity="🚗 Late Night Long Drive & Music">
+              <span class="chip-icon">🚗</span>
+              <span class="chip-text">Late Night Drive</span>
+            </button>
+            <button class="activity-chip" data-activity="🍦 Ice Cream & Walk">
+              <span class="chip-icon">🍦</span>
+              <span class="chip-text">Ice Cream & Walk</span>
+            </button>
+          </div>
+        </div>
+
         <div class="celebrate-actions">
           <button class="pill-btn share-celebrate-btn" id="sendLoveBackBtn">
             <span>💬 Send Confirmation on WhatsApp</span>
@@ -301,6 +328,14 @@
           <button class="share-platform-btn preview-link" id="previewLinkBtn">
             <span>👀 Open Preview</span>
           </button>
+        </div>
+
+        <!-- QR Code Share Card -->
+        <div class="qr-share-section">
+          <div class="qr-preview-card">
+            <img id="qrImage" src="" alt="Scan Proposal QR Code" class="qr-img">
+            <span class="qr-label">Scan to open on phone camera 📷</span>
+          </div>
         </div>
       </div>
     </div>
@@ -401,8 +436,8 @@
   <!-- Hidden YouTube Audio IFrame Player -->
   <div id="youtubePlayerContainer" style="position: fixed; bottom: -120px; right: -120px; width: 10px; height: 10px; opacity: 0.001; pointer-events: none; z-index: -999;"></div>
 
-  <!-- HTML5 Audio Element for local/mp3 audio -->
-  <audio id="bgAudio" preload="auto" loop></audio>
+  <!-- HTML5 Audio Element for local/mp3 audio (Indila - Love Story) -->
+  <audio id="bgAudio" src="assets/audio/love-story.mp3" preload="auto" loop playsinline autoplay></audio>
 
   <script src="script.js"></script>
 </body>
