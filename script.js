@@ -451,7 +451,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   function updateGeneratedLink() {
-    const url = new URL(window.location.origin + window.location.pathname);
+    let base = window.location.origin;
+    if (!base || base === 'null' || window.location.protocol === 'file:') {
+      base = 'https://kuchu-puchu-sigma.vercel.app';
+    }
+    const pathname = window.location.protocol === 'file:' ? '/' : window.location.pathname;
+    const url = new URL(base + pathname);
     if (state.recipientName) url.searchParams.set('to', state.recipientName);
     if (state.creatorName && state.creatorName !== 'hxni') url.searchParams.set('from', state.creatorName);
     if (state.currentQuestion !== 'Will you be my Valentine?') {
